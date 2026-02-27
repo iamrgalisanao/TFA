@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\LaneController;
+use App\Http\Controllers\Api\OperatorController;
 use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\WalletController;
@@ -29,4 +31,14 @@ Route::prefix('v1')->group(function () {
     // Trips & Audit
     Route::get('/trips', [TripController::class, 'index']);
     Route::get('/trips/{id}', [TripController::class, 'show']);
+
+    // Operators (Admin)
+    Route::get('/operators', [OperatorController::class, 'index']);
+    Route::post('/operators', [OperatorController::class, 'store']);
+    Route::get('/operators/{id}', [OperatorController::class, 'show']);
+    Route::put('/operators/{id}', [OperatorController::class, 'update']);
+    Route::post('/operators/{id}/topup', [OperatorController::class, 'topup']);
+
+    // Audit Logs (Admin)
+    Route::get('/audit-logs', [AuditLogController::class, 'index']);
 });
