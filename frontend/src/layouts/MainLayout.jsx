@@ -67,8 +67,11 @@ const MainLayout = () => {
                 flexDirection: 'column'
             }}>
                 <div style={{ padding: '0 0.5rem 2rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '32px', height: '32px', background: 'var(--primary)', borderRadius: '8px' }}></div>
-                    <h2 style={{ fontSize: '1.25rem' }}>TFA Core</h2>
+                    <img src="/tfa.svg" alt="TFA Logo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+                    <div>
+                        <h2 style={{ fontSize: '1rem', lineHeight: 1.1, margin: 0 }}>Terminal Fee</h2>
+                        <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Automation</p>
+                    </div>
                 </div>
 
                 <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

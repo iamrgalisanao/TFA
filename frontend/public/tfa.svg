@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="gate" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#bfdbfe" stop-opacity="0.9"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+
+  <!-- Road / lane base -->
+  <rect x="6" y="44" width="52" height="8" rx="2" fill="#0c2d6b" opacity="0.5"/>
+
+  <!-- Lane center dashes -->
+  <rect x="14" y="47" width="8" height="2" rx="1" fill="white" opacity="0.3"/>
+  <rect x="28" y="47" width="8" height="2" rx="1" fill="white" opacity="0.3"/>
+  <rect x="42" y="47" width="8" height="2" rx="1" fill="white" opacity="0.3"/>
+
+  <!-- Left bollard -->
+  <rect x="10" y="34" width="5" height="12" rx="2" fill="white" opacity="0.9"/>
+  <!-- Left bollard cap -->
+  <rect x="9" y="33" width="7" height="3" rx="1.5" fill="#60a5fa"/>
+
+  <!-- Right bollard -->
+  <rect x="49" y="34" width="5" height="12" rx="2" fill="white" opacity="0.9"/>
+  <!-- Right bollard cap -->
+  <rect x="48" y="33" width="7" height="3" rx="1.5" fill="#60a5fa"/>
+
+  <!-- Barrier arm (horizontal gate) with glow -->
+  <rect x="15" y="35" width="34" height="4" rx="2" fill="url(#gate)" filter="url(#glow)"/>
+  <!-- Barrier stripes -->
+  <rect x="18" y="35" width="4" height="4" rx="0" fill="#f59e0b" opacity="0.85"/>
+  <rect x="26" y="35" width="4" height="4" rx="0" fill="#f59e0b" opacity="0.85"/>
+  <rect x="34" y="35" width="4" height="4" rx="0" fill="#f59e0b" opacity="0.85"/>
+  <rect x="42" y="35" width="4" height="4" rx="0" fill="#f59e0b" opacity="0.85"/>
+
+  <!-- Control box / payment reader -->
+  <rect x="24" y="14" width="16" height="18" rx="3" fill="white" opacity="0.15"/>
+  <rect x="25" y="15" width="14" height="16" rx="2" fill="#1e3a8a" opacity="0.5"/>
+  <!-- Screen glow -->
+  <rect x="27" y="17" width="10" height="6" rx="1.5" fill="#60a5fa" opacity="0.9"/>
+  <!-- Keypad dots -->
+  <circle cx="29" cy="27" r="1" fill="white" opacity="0.7"/>
+  <circle cx="32" cy="27" r="1" fill="white" opacity="0.7"/>
+  <circle cx="35" cy="27" r="1" fill="white" opacity="0.7"/>
+  <!-- Pole connecting box to gate -->
+  <rect x="31" y="32" width="2" height="3" rx="1" fill="white" opacity="0.7"/>
+
+  <!-- WiFi / signal arcs above box indicating connectivity -->
+  <path d="M 28 11 Q 32 7 36 11" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M 30 9 Q 32 6.5 34 9" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+</svg>
