@@ -6,7 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Lane;
 use App\Models\LaneEvent;
 use App\Models\LaneOverride;
+use App\Models\Trip;
 use App\Models\User;
+use App\Models\Vehicle;
+use App\Models\Wallet;
+use App\Models\LedgerTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -78,7 +82,7 @@ class LaneController extends Controller
         });
     }
 
-    // --- Lane Events (Traffic Feed) ---
+    // --- Lane Events (Traffic Feed & Decision Engine) ---
     public function events(Request $request)
     {
         return response()->json(LaneEvent::orderBy('created_at', 'desc')->limit(50)->get());
@@ -86,6 +90,7 @@ class LaneController extends Controller
 
     public function ingest(Request $request)
     {
+        // 1. Validation & Fast Ingest
         $validated = $request->validate([
             'event_uuid' => 'required|uuid|unique:lane_events',
             'camera_event_id' => 'required|string',
@@ -96,18 +101,101 @@ class LaneController extends Controller
             'signature' => 'required|string'
         ]);
 
-        $event = LaneEvent::create([
-            'id' => (string) Str::uuid(),
-            'event_uuid' => $validated['event_uuid'],
-            'camera_event_id' => $validated['camera_event_id'],
-            'plate_number' => $validated['plate_number'],
-            'lane_id' => $validated['lane_id'],
-            'direction' => $validated['direction'],
-            'event_timestamp' => $validated['timestamp'],
-            'signature' => $validated['signature'],
-            'raw_payload' => $request->all()
-        ]);
+        return DB::transaction(function () use ($validated, $request) {
+            // Persist Event
+            $event = LaneEvent::create([
+                'id' => (string) Str::uuid(),
+                'event_uuid' => $validated['event_uuid'],
+                'camera_event_id' => $validated['camera_event_id'],
+                'plate_number' => $validated['plate_number'],
+                'lane_id' => $validated['lane_id'],
+                'direction' => $validated['direction'],
+                'event_timestamp' => $validated['timestamp'],
+                'signature' => $validated['signature'],
+                'raw_payload' => $request->all()
+            ]);
 
-        return response()->json(['status' => 'success', 'core_event_id' => $event->id], 201);
+            $decision = [
+                'core_event_id' => $event->id,
+                'lane_id' => $event->lane_id,
+                'action' => 'hold',
+                'reason' => 'pending_logic',
+                'exception_flag' => false
+            ];
+
+            // 2. Decision Logic
+            $plate = strtoupper($validated['plate_number']);
+            $vehicle = Vehicle::where('plate_number', $plate)->first();
+
+            if ($validated['direction'] === 'entry') {
+                // Trip Start
+                $trip = Trip::create([
+                    'plate_number' => $plate,
+                    'status' => 'ENTRY_RECORDED',
+                    'entry_event_id' => $event->id,
+                    'entry_time' => $validated['timestamp']
+                ]);
+
+                $decision['action'] = 'open';
+                $decision['trip_id'] = $trip->id;
+                $decision['reason'] = 'entry_recorded';
+            } else {
+                // Trip End & Payment Deduction
+                $trip = Trip::where('plate_number', $plate)
+                    ->whereIn('status', ['ENTRY_RECORDED', 'HELD_INSUFFICIENT_FUNDS'])
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                if (!$trip) {
+                    $decision['action'] = 'hold';
+                    $decision['reason'] = 'no_active_entry_record';
+                    $decision['exception_flag'] = true;
+                } else {
+                    $fee_minor = 5000; // Flat 50.00 PHP for simulation
+                    $wallet = $vehicle ? Wallet::where('operator_id', $vehicle->operator_id)->first() : null;
+
+                    if ($wallet && $wallet->balance_minor >= $fee_minor) {
+                        // Deduct
+                        $wallet->balance_minor -= $fee_minor;
+                        $wallet->save();
+
+                        // Ledger
+                        LedgerTransaction::create([
+                            'wallet_id' => $wallet->id,
+                            'type' => 'DEBIT',
+                            'category' => 'TRIP_FEE',
+                            'amount_minor' => $fee_minor,
+                            'ref_type' => 'trip',
+                            'ref_id' => $trip->id,
+                            'idempotency_key' => $event->event_uuid
+                        ]);
+
+                        $trip->update([
+                            'status' => 'EXIT_PAID',
+                            'exit_event_id' => $event->id,
+                            'exit_time' => $validated['timestamp'],
+                            'fee_minor' => $fee_minor
+                        ]);
+
+                        $decision['action'] = 'open';
+                        $decision['trip_id'] = $trip->id;
+                        $decision['reason'] = 'fee_deducted';
+                        $decision['wallet_balance_after_minor'] = $wallet->balance_minor;
+                    } else {
+                        $trip->update(['status' => 'HELD_INSUFFICIENT_FUNDS']);
+                        $decision['action'] = 'hold';
+                        $decision['reason'] = 'insufficient_funds';
+                        $decision['exception_flag'] = true;
+                    }
+                }
+            }
+
+            // Sync Lane Barrier Status (Mock instruction to hardware)
+            if ($decision['action'] === 'open') {
+                Lane::where('id', $event->lane_id)->update(['barrier_status' => 'OPEN']);
+            }
+
+            return response()->json($decision, 201);
+        });
     }
 }

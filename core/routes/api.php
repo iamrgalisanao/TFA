@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\LaneController;
+use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\WalletController;
 use Illuminate\Http\Request;
@@ -24,4 +25,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/vehicles', [VehicleController::class, 'store']);
     Route::get('/wallet', [WalletController::class, 'index']);
     Route::post('/wallet/topup', [WalletController::class, 'topup']);
+
+    // Trips & Audit
+    Route::get('/trips', [TripController::class, 'index']);
+    Route::get('/trips/{id}', [TripController::class, 'show']);
 });

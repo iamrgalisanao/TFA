@@ -47,5 +47,13 @@
 - [x] Translate Minor Unit ledgers to standard PHP Currency formatting displays.
 
 ### Execution (Phase 5: Trigger)
-- [x] Define Deployment procedures (Cloud vs Edge deployment, DB migrations) in `architecture/06_trigger_deployment.md`.
-- [x] Finalize the Maintenance Log / Handover document.
+- [x] Implement **Core Decision Engine** (`LaneController@ingest`) for automated entry/exit processing.
+- [x] Develop **USB Camera Edge Simulator** (`tools/usb_camera_simulator.py`) for handwritten plate simulation.
+- [ ] Define Deployment procedures (Cloud vs Edge deployment, DB migrations) in `architecture/06_trigger_deployment.md`.
+- [ ] Finalize the Maintenance Log / Handover document.
+
+## Todo / Parked Features
+- [ ] **Transaction Explorer**: Comprehensive auditing UI for all roles (Parked).
+- [ ] **DOTr Remittance**: Automated batching and bank API integration (Requires formal bank specs).
+- [ ] **Hardware ANPR**: Production-grade camera integration (Pending hardware availability).
+- [ ] **mTLS Security**: Hardening of Edge-to-Core communication layer.

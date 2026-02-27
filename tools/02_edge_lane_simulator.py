@@ -56,12 +56,12 @@ if __name__ == "__main__":
     
     # 1. Simulate Entry
     print("\n--- SIMULATING ENTRY ---")
-    entry_payload = create_edge_payload("ABC1234", "LANE-EN-01", "entry")
+    entry_payload = create_edge_payload("ABC1234", "LANE-01", "entry")
     send_to_api(entry_payload)
 
     # 2. Simulate Exit (Charge Fee)
     print("\n--- SIMULATING EXIT ---")
-    exit_payload = create_edge_payload("ABC1234", "LANE-EX-01", "exit")
+    exit_payload = create_edge_payload("ABC1234", "EXIT-01", "exit")
     send_to_api(exit_payload)
     
     # 3. Simulate Idempotent Retry
