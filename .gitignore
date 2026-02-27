@@ -1,0 +1,38 @@
+# Common
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+.idea/
+.vscode/
+*.log
+.phpunit.result.cache
+
+# Core (Laravel)
+/core/vendor/
+/core/node_modules/
+/core/public/storage
+/core/storage/*.key
+/core/.phpunit.result.cache
+/core/.env
+/core/.env.backup
+/core/auth.json
+/core/public/hot
+/core/public/storage
+/core/storage/framework/cache/data/*
+/core/storage/framework/sessions/*
+/core/storage/framework/testing/*
+/core/storage/framework/views/*
+/core/storage/logs/*
+
+# Frontend (React/Vite)
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env
+/frontend/.env.local
+
+# Temp
+.tmp/
+.temp/
