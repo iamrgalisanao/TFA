@@ -18,9 +18,11 @@ import platform
 if platform.system() == "Windows":
     pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 else:
-    # On Mac/Linux, we assume it is in the PATH. 
-    # If using Homebrew on Apple Silicon: /opt/homebrew/bin/tesseract
-    pass
+    # On Mac/Linux, we assume it is in the PATH or check standard Homebrew location
+    if os.path.exists("/opt/homebrew/bin/tesseract"):
+        pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
+    elif os.path.exists("/usr/local/bin/tesseract"):
+        pytesseract.pytesseract.tesseract_cmd = "/usr/local/bin/tesseract"
 
 # --- Configurations ---
 # API_URL = "http://localhost:8001/api/v1/lane/event"
@@ -124,8 +126,11 @@ def start_capture():
 
     while True:
         ret, frame = cap.read()
-        if not ret:
-            break
+        if not ret or frame is None:
+            status_msg = "Camera Error: Check connection"
+            cv2.imshow("TFA Edge Simulator — OCR Mode", np.zeros((480, 640, 3), dtype=np.uint8))
+            if cv2.waitKey(100) & 0xFF == ord('q'): break
+            continue
 
         # Save a clean snapshot BEFORE drawing any overlays (for OCR)
         clean_frame = frame.copy()

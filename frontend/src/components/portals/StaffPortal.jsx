@@ -19,10 +19,32 @@ const StaffPortal = ({ statsData }) => {
     const simulateScan = async () => {
         setIsSimulating(true);
         try {
+            // 1. Try hitting the Local Bridge first (for automatic local camera launch)
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 1000); // 1s timeout
+
+                const bridgeResp = await fetch('http://localhost:9005/trigger-scan', {
+                    method: 'POST',
+                    signal: controller.signal
+                });
+
+                if (bridgeResp.ok) {
+                    setSimAlert({ type: 'success', text: 'Local Camera Bridge Triggered!' });
+                    setIsSimulating(false);
+                    setTimeout(() => setSimAlert(null), 5000);
+                    return; // Success, no need to call server
+                }
+            } catch (e) {
+                // Bridge not running or not supported, fall back to server-side simulator
+                console.log("Local bridge not found, falling back to server simulator.");
+            }
+
+            // 2. Fallback: Trigger the server-side simulator (usually headless on production)
             const resp = await api.post('/lane/trigger-camera?mock_role=' + role);
             setSimAlert({ type: 'success', text: resp.data.message });
         } catch (err) {
-            setSimAlert({ type: 'error', text: 'Failed to launch camera simulator.' });
+            setSimAlert({ type: 'error', text: 'Failed to launch simulator.' });
         } finally {
             setIsSimulating(false);
             setTimeout(() => setSimAlert(null), 5000);

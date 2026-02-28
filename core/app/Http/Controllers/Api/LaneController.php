@@ -91,12 +91,15 @@ class LaneController extends Controller
         // Launch asynchronously on the host machine so PHP doesn't block
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $toolsDir = realpath(base_path('../tools'));
-            // The shell launched by PHP might not have the same python path/envs as your manual terminal.
-            // We run a quick pip install to ensure cv2 and other requirements are present in this environment before launching.
             $cmd = "start \"Edge Simulator\" cmd.exe /k \"cd /d {$toolsDir} && pip install opencv-python pytesseract requests Pillow numpy && python usb_camera_simulator.py\"";
             pclose(popen($cmd, "r"));
+        } elseif (PHP_OS === 'Darwin') {
+            // Mac specific: Open a new Terminal window and run the simulator
+            $toolsDir = realpath(base_path('../tools'));
+            $cmd = "osascript -e 'tell application \"Terminal\" to do script \"cd {$toolsDir} && /opt/homebrew/bin/python3 usb_camera_simulator.py\"' -e 'tell application \"Terminal\" to activate'";
+            exec($cmd . " > /dev/null 2>&1 &");
         } else {
-            exec("python \"$scriptPath\" > /dev/null 2>&1 &");
+            exec("python3 \"$scriptPath\" > /dev/null 2>&1 &");
         }
 
         return response()->json([
