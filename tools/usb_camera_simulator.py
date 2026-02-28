@@ -12,13 +12,21 @@ from datetime import datetime
 
 # --- Tesseract OCR ---
 import pytesseract
-# Standard Windows install path from UB-Mannheim
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+import platform
+
+# Handle Tesseract path across OS
+if platform.system() == "Windows":
+    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+else:
+    # On Mac/Linux, we assume it is in the PATH. 
+    # If using Homebrew on Apple Silicon: /opt/homebrew/bin/tesseract
+    pass
 
 # --- Configurations ---
-API_URL = "http://localhost:8001/api/v1/lane/event"
+# API_URL = "http://localhost:8001/api/v1/lane/event"
+API_URL = "http://tfa.abbadev.com/api/v1/lane/event"
 SECRET_KEY = b"lane_edge_secret_789"
-TMP_DIR = "e:/2026/TFA/.tmp/camera_snaps"
+TMP_DIR = os.path.join(os.path.dirname(__file__), "../.tmp/camera_snaps")
 
 if not os.path.exists(TMP_DIR):
     os.makedirs(TMP_DIR)

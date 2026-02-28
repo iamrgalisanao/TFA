@@ -7,7 +7,8 @@ import requests
 from datetime import datetime
 
 SECRET_KEY = b"lane_edge_secret_789"  # Sourced securely via .env mapping
-API_URL = "http://localhost:8001/api/v1/lane/event"
+# API_URL = "http://localhost:8001/api/v1/lane/event"
+API_URL = "http://tfa.abbadev.com/api/v1/lane/event"
 
 def generate_hmac_signature(payload_str: str, secret: bytes) -> str:
     """Generates an HMAC-SHA256 signature for the given payload string."""
