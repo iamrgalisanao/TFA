@@ -3,13 +3,8 @@ import {
     ArrowRightLeft, CheckCircle2, AlertTriangle, Clock, ShieldCheck,
     RefreshCw, ChevronRight, X, Car, Hash, Landmark, Timer
 } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
-
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { Accept: 'application/json' }
-});
 
 const STATUS_CONFIG = {
     EXIT_PAID: { color: 'var(--success)', bg: 'rgba(16,185,129,0.1)', label: 'Paid', icon: CheckCircle2 },

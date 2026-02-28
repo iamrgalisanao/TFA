@@ -3,12 +3,7 @@ import {
     ShieldAlert, Camera, Landmark, ShieldCheck,
     AlertTriangle, Info, CheckCircle2, RefreshCw, Filter
 } from 'lucide-react';
-import axios from 'axios';
-
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { Accept: 'application/json' }
-});
+import api from '../services/api';
 
 const CATEGORY_CONFIG = {
     OVERRIDE: { label: 'Lane Override', color: '#f59e0b', bg: 'rgba(245,158,11,0.10)', icon: ShieldCheck },

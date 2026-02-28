@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Activity, Car, Wallet, ArrowUpRight, ArrowDownRight, Clock, Loader2, CreditCard } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AdminPortal from '../components/portals/AdminPortal';
 import StaffPortal from '../components/portals/StaffPortal';
 import OperatorPortal from '../components/portals/OperatorPortal';
-
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { 'Accept': 'application/json' }
-});
 
 const Dashboard = () => {
     const { role, isOperator, isAdmin, isStaff } = useAuth();

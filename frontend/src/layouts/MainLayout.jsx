@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Car, Wallet, FileText, Settings, LogOut, Bell, Loader2, Users, ShieldAlert, MonitorPlay, Landmark, HelpCircle } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import HelpTour from '../components/HelpTour';
 
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { 'Accept': 'application/json' }
-});
 
 const MainLayout = () => {
     const location = useLocation();

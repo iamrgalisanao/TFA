@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { Activity, ShieldAlert, MonitorPlay, CheckCircle2, AlertCircle, Lock, Unlock, Settings2, Loader2, X, Search, Filter } from 'lucide-react';
-import axios from 'axios';
+import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { 'Accept': 'application/json' }
-});
 
 const StaffPortal = ({ statsData }) => {
     const { role } = useAuth();

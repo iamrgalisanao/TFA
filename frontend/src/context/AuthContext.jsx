@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 
 const AuthContext = createContext();
 
@@ -10,10 +10,6 @@ export const AuthProvider = ({ children }) => {
     const [role, setRole] = useState(localStorage.getItem('mock_role') || 'admin');
     const [loading, setLoading] = useState(true);
 
-    const api = axios.create({
-        baseURL: 'http://localhost:8001/api/v1',
-        headers: { 'Accept': 'application/json' }
-    });
 
     const fetchProfile = async () => {
         setLoading(true);

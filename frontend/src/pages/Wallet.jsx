@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Wallet as WalletIcon, ArrowUpCircle, ArrowDownCircle, Plus, History, Loader2, CheckCircle2, TrendingUp, Search } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
-
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { 'Accept': 'application/json' }
-});
 
 const Wallet = () => {
     const { role } = useAuth();

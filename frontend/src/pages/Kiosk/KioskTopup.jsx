@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Wallet, QrCode, Banknote, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react';
-import axios from 'axios';
-
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { 'Accept': 'application/json' }
-});
+import api from '../../services/api';
 
 const KioskTopup = () => {
     const location = useLocation();

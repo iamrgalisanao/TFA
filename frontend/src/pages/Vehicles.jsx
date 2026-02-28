@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Car, Trash2, Edit2, Loader2, CheckCircle2 } from 'lucide-react';
-import axios from 'axios';
-
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { 'Accept': 'application/json' }
-});
+import api from '../services/api';
 
 const Vehicles = () => {
     const [vehicles, setVehicles] = useState([]);

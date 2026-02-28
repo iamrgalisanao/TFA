@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QrCode, Smartphone, CarFront, ArrowRight } from 'lucide-react';
-import axios from 'axios';
-
-const api = axios.create({
-    baseURL: 'http://localhost:8001/api/v1',
-    headers: { 'Accept': 'application/json' }
-});
+import api from '../../services/api';
 
 const KioskHome = () => {
     const navigate = useNavigate();
