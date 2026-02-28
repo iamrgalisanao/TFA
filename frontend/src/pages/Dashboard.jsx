@@ -25,7 +25,7 @@ const Dashboard = () => {
 
             if (isOperator || isAdmin) {
                 endpoints.push(api.get(`/wallet?mock_role=${role}`));
-                endpoints.push(api.get(`/vehicles?mock_role=${role}`));
+                endpoints.push(api.get(`/vehicles?mock_role=${role}&count=true`));
                 endpoints.push(api.get(`/trips?mock_role=${role}`));
             }
 
@@ -53,7 +53,7 @@ const Dashboard = () => {
 
             setStatsData({
                 balance: walletResp.data.balance_minor / 100,
-                vehicles: vehicleResp.data.length,
+                vehicles: vehicleResp.data.count !== undefined ? vehicleResp.data.count : (vehicleResp.data.length || 0),
                 transactions: walletResp.data.transactions || [],
                 events: eventsResp.data || [],
                 lanes: lanesResp.data || [],

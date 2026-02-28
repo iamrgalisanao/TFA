@@ -21,7 +21,7 @@ const OperatorPortal = ({ statsData }) => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
+            <div className="tour-operator-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
                 {stats.map((stat) => (
                     <div key={stat.name} className="card animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -41,7 +41,7 @@ const OperatorPortal = ({ statsData }) => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
-                <div className="card" style={{ padding: 0 }}>
+                <div className="card tour-operator-feed" style={{ padding: 0 }}>
                     <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <h3 style={{ fontSize: '1.125rem' }}>Recent Fleet Activity</h3>
                         <Link to="/transactions" style={{ fontSize: '0.875rem', color: 'var(--primary)', textDecoration: 'none' }}>View All</Link>
@@ -129,7 +129,7 @@ const OperatorPortal = ({ statsData }) => {
                     </div>
                 </div>
 
-                <div className="card" style={{ background: 'var(--primary)', color: 'white', border: 'none' }}>
+                <div className="card tour-operator-topup" style={{ background: 'var(--primary)', color: 'white', border: 'none' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                         <CreditCard size={24} />
                         <h3 style={{ color: 'white' }}>Quick Top-up</h3>

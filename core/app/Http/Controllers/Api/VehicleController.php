@@ -10,10 +10,21 @@ use Illuminate\Support\Facades\Validator;
 
 class VehicleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // For now, return all vehicles with operator info
-        return response()->json(Vehicle::with('operator')->get());
+        $query = Vehicle::query();
+
+        if ($request->input('mock_role') === 'operator') {
+            $operator = \App\Models\Operator::first(); // mock operator
+            $query->where('operator_id', $operator->id);
+        }
+
+        if ($request->boolean('count')) {
+            return response()->json(['count' => $query->count()]);
+        }
+
+        // For now, return vehicles with operator info
+        return response()->json($query->with('operator')->get());
     }
 
     public function store(Request $request)

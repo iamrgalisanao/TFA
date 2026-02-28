@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Car, Wallet, FileText, Settings, LogOut, Bell, Loader2, Users, ShieldAlert, MonitorPlay, Landmark } from 'lucide-react';
+import { LayoutDashboard, Car, Wallet, FileText, Settings, LogOut, Bell, Loader2, Users, ShieldAlert, MonitorPlay, Landmark, HelpCircle } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import HelpTour from '../components/HelpTour';
 
 const api = axios.create({
     baseURL: 'http://localhost:8001/api/v1',
@@ -13,6 +14,7 @@ const MainLayout = () => {
     const location = useLocation();
     const { role, switchRole, user, isAdmin, isStaff, isOperator, loading } = useAuth();
     const [balance, setBalance] = useState(null);
+    const [runTour, setRunTour] = useState(false);
 
     const fetchBalance = async () => {
         if (!isOperator) return;
@@ -46,6 +48,70 @@ const MainLayout = () => {
     };
 
     const navItems = getNavItems();
+
+    const getTourSteps = () => {
+        // Dashboard Tours
+        if (location.pathname === '/') {
+            if (isAdmin) return [
+                { target: '.tour-admin-stats', content: 'These top cards show your live revenue generation (MTD), registered partner operators, and pending remittances queued for payout.', placement: 'bottom' },
+                { target: '.tour-admin-audit', content: 'The System Health & Audit trail provides a real-time, non-reputable log of all critical system activities and lane overrides.', placement: 'left' },
+                { target: '.tour-admin-exports', content: 'Export clean PDF / Excel spreadsheets of the ledger here, ready for DOTr or Finance reconciliation.', placement: 'left' },
+            ];
+            if (isStaff) return [
+                { target: '.tour-staff-stats', content: 'Stay on top of live alerts and quickly identify if any hardware components go offline.', placement: 'bottom' },
+                { target: '.tour-staff-feed', content: 'This terminal feed streams every incoming and outgoing vehicle recognized by the ANPR cameras in real-time.', placement: 'right' },
+                { target: '.tour-staff-override', content: 'In case of emergency, physical sensor malfunction, or missing plates, use this panel to forcefully command the barrier to open or close.', placement: 'left' },
+            ];
+            if (isOperator) return [
+                { target: '.tour-operator-stats', content: 'Track exactly how many vehicles you have registered in the fleet, and view the amount of toll/parking fees deducted this month.', placement: 'bottom' },
+                { target: '.tour-operator-feed', content: 'A live feed of your own drivers. Watch them ping entry/exit gates and verify the exact fee deducted at that exact second.', placement: 'right' },
+                { target: '.tour-operator-topup', content: 'Need a higher balance so your drivers never get stuck at a gate? Start a real-time GCash/Bank top-up here.', placement: 'left' },
+            ];
+        }
+
+        // Sub-page Tours (Admin mostly requested these so far)
+        if (location.pathname === '/vehicles') {
+            return [
+                { target: '.tour-vehicles-add', content: 'Click here to register a new vehicle into the system, binding it to a specific operator.', placement: 'bottom' },
+                { target: '.tour-vehicles-search', content: 'Quickly find specific plate numbers or filter the fleet by vehicle type (e.g. Bus vs. Minibus).', placement: 'bottom' },
+                { target: '.tour-vehicles-table', content: 'This table contains the master list of all authorized vehicles allowed to trigger barrier entry/exit.', placement: 'top' },
+            ];
+        }
+
+        if (location.pathname === '/operators') {
+            return [
+                { target: '.tour-operators-add', content: 'Register a new Transport Operator. A digital wallet shadow account will be created automatically for them.', placement: 'bottom' },
+                { target: '.tour-operators-summary', content: 'Monitor the Total Assets Under Management (AUM) across all operator wallets, and spot any accounts with low balances.', placement: 'bottom' },
+                { target: '.tour-operators-list', content: 'Click any operator card to detailed analytics, view trip history, or process manual wallet Top-ups if they handed you cash/bank transfer.', placement: 'top' },
+            ];
+        }
+
+        if (location.pathname === '/transactions') {
+            return [
+                { target: '.tour-transactions-summary', content: 'View aggregate revenue numbers, and quickly see how many trips are actively "In Transit" inside the terminal right now.', placement: 'bottom' },
+                { target: '.tour-transactions-filter', content: 'Search by plate number, or filter explicitly for trips that are Held due to Insufficient Funds.', placement: 'bottom' },
+                { target: '.tour-transactions-table', content: 'This is the immutable ledger of trips. Click any row to expand a granular timeline of exactly when the vehicle entered and exited, down to the second.', placement: 'top' },
+            ];
+        }
+
+        if (location.pathname === '/audit') {
+            return [
+                { target: '.tour-audit-summary', content: 'This unified log captures hardware alerts, lane overrides, financial debits, and software events in one place.', placement: 'bottom' },
+                { target: '.tour-audit-filter', content: 'Need to investigate a manual barrier open? Filter by "Overrides" to isolate those specific critical events.', placement: 'bottom' },
+                { target: '.tour-audit-feed', content: 'Scroll through the chronological timeline. Every entry records the EXACT Actor (Admin/Staff) and the associated Idempotency key for forensic analysis.', placement: 'top' },
+            ];
+        }
+
+        if (['/lanes', '/remittances', '/settings'].includes(location.pathname)) {
+            return [
+                { target: '.tour-coming-soon', content: 'This module is currently parked for a future sprint. Stay tuned for updates!', placement: 'bottom' }
+            ];
+        }
+
+        return [];
+    };
+
+    const tourSteps = getTourSteps();
 
     if (loading) {
         return (
@@ -163,7 +229,22 @@ const MainLayout = () => {
                                 </span>
                             </div>
                         )}
-                        <button style={{ color: 'var(--text-muted)', background: 'transparent' }}><Bell size={20} /></button>
+                        <button
+                            onClick={() => {
+                                if (tourSteps.length > 0) {
+                                    setRunTour(true);
+                                } else {
+                                    alert("No interactive guide available for this page currently.");
+                                }
+                            }}
+                            title="Start Interactive Guide"
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.4rem', borderRadius: '50%', background: 'rgba(37, 99, 235, 0.1)', color: 'var(--primary)', border: 'none', cursor: 'pointer' }}
+                        >
+                            <HelpCircle size={20} />
+                        </button>
+                        <button style={{ color: 'var(--text-muted)', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                            <Bell size={20} />
+                        </button>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div className="desktop-only" style={{ textAlign: 'right' }}>
                                 <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>{user?.name}</div>
@@ -182,6 +263,8 @@ const MainLayout = () => {
                     </div>
                 </section>
             </main>
+
+            <HelpTour steps={tourSteps} run={runTour} setRun={setRunTour} />
         </div>
     );
 };

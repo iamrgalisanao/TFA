@@ -65,6 +65,7 @@ const Vehicles = () => {
                     <p style={{ color: 'var(--text-muted)' }}>Register and manage your fleet for automated entry/exit.</p>
                 </div>
                 <button
+                    className="tour-vehicles-add"
                     onClick={() => setShowModal(true)}
                     style={{
                         background: 'var(--primary)',
@@ -82,8 +83,8 @@ const Vehicles = () => {
                 </button>
             </div>
 
-            <div className="card" style={{ padding: 0 }}>
-                <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', gap: '1rem' }}>
+            <div className="card tour-vehicles-table" style={{ padding: 0 }}>
+                <div className="tour-vehicles-search" style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', gap: '1rem' }}>
                     <div style={{ flex: 1, position: 'relative' }}>
                         <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                         <input

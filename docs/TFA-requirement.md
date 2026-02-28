@@ -76,6 +76,7 @@ The system will:
 - Automatically deduct applicable terminal fees upon vehicle exit.
 - Integrate with GCash and bank transfer channels (InstaPay/PESONet) for wallet top‑ups.
 - Integrate with banking APIs to automate DOTr remittance via bank transfer.
+- Provide a physical self-service Top-up Kiosk interface integrating with e-wallets, QRPh, and cash bill acceptors.
 - Offer an operator dashboard for monitoring, exception handling, and reporting.
 - Provide a public portal for account management and top‑ups.
 - Generate daily, weekly, monthly, and yearly collection reports.
@@ -127,12 +128,12 @@ The Automated Terminal Fee Collection System is a new, standalone system that wi
 |-------------------|--------------------------------------------------------------------------------------|
 | **Operator**      | Staff of bus/taxi companies who manage vehicle registration, view outstanding balances, and generate SOAs. |
 | **Terminal Staff**| PITX personnel who monitor lane operations, handle exceptions (unregistered plates), and access real‑time reports. |
-| **Driver**        | Individual driver of a registered vehicle; can top up wallet via public portal (optional). |
+| **Driver**        | Individual driver of a registered vehicle; can top up wallet via public portal or physical self-service Top-up Kiosks. |
 | **System Administrator** | IT staff managing user accounts, system configuration, and audit logs.          |
 | **DOTr Auditor**  | Government personnel who access remittance reports (via secure portal or file).      |
 
 ### 2.3 Operating Environment
-- **Hardware:** ANPR cameras (Hikvision DS-TCG405-E or equivalent), edge servers, lane controllers, barriers, deposit machines (optional for cash top‑ups).
+- **Hardware:** ANPR cameras (Hikvision DS-TCG405-E or equivalent), edge servers, lane controllers, barriers, Touch-enabled Kiosks with Bill Acceptors (no-change capability).
 - **Network:** High‑speed LAN within terminal, secure internet connection for cloud services.
 - **Software:** Backend services hosted on cloud (AWS/Azure) with on‑premise edge processing. Web interfaces accessible via modern browsers. Mobile‑friendly design.
 
@@ -228,14 +229,22 @@ The Automated Terminal Fee Collection System is a new, standalone system that wi
 | FR-801  | A public website shall allow drivers/operators to register, manage their account, view balance, and top up using GCash or bank transfer. |
 | FR-802  | The portal shall be mobile‑responsive and support both English and Filipino (optional).       |
 
-#### 3.1.9 Reporting and Analytics
+#### 3.1.9 Self-Service Top-up Kiosks
+| ID      | Requirement                                                                                   |
+|---------|-----------------------------------------------------------------------------------------------|
+| FR-851  | The system shall provide a dedicated touch-friendly terminal interface deployed on physical kiosks inside the terminal. |
+| FR-852  | Kiosks shall support wallet top-ups via direct integrations with GCash and QRPh (generating dynamic QR on screen). |
+| FR-853  | Kiosks shall integrate with a physical cash Bill Acceptor. |
+| FR-854  | The kiosk cash payment workflow must strictly enforce "Exact Amount Only / No Change Provided", updating the wallet balance exactly by the inserted cash amount. |
+
+#### 3.1.10 Reporting and Analytics
 | ID      | Requirement                                                                                   |
 |---------|-----------------------------------------------------------------------------------------------|
 | FR-901  | The system shall generate daily, weekly, monthly, and yearly collection reports, filterable by vehicle type, operator, and date range. |
 | FR-902  | Reports shall be exportable to PDF, Excel, and CSV.                                           |
 | FR-903  | The system shall provide a dashboard for PITX management with key metrics (total collections, average fee per vehicle, peak hours, etc.). |
 
-#### 3.1.10 DOTR Remittance
+#### 3.1.11 DOTR Remittance
 | ID       | Requirement                                                                                   |
 |----------|-----------------------------------------------------------------------------------------------|
 | FR-1001  | The system shall compute the amount due to DOTR based on collection data and predefined share formula. |
@@ -253,13 +262,14 @@ The Automated Terminal Fee Collection System is a new, standalone system that wi
 
 #### 3.2.1 User Interfaces
 - Operator Dashboard: Responsive web UI built with React.js, optimized for desktop and tablet.
-- Public Portal: Mobile‑first design using Vue.js.
+- Public Portal: Mobile‑first design using Vue.js/React.
+- Top-up Kiosk: Simplified, touch-optimized fullscreen web POS interface interacting with local hardware daemon.
 - Admin Panel: Similar to operator dashboard with additional controls.
 
 #### 3.2.2 Hardware Interfaces
 - ANPR Cameras: Ethernet connection; integration via vendor SDK or ONVIF.
 - Lane Barriers: Relay control via edge server.
-- Deposit Machines: Serial or TCP/IP communication for cash/coin acceptance.
+- Bill Acceptors: USB/Serial connection via a local daemon relaying events (insert, stack, reject) to the Kiosk UI.
 
 #### 3.2.3 Software Interfaces
 - Payment Aggregator API: RESTful with JSON payloads; webhook callbacks (for GCash and bank transfer status).

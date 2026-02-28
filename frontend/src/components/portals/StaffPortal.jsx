@@ -65,7 +65,7 @@ const StaffPortal = ({ statsData }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* Staff Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+            <div className="tour-staff-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
                 <div className="card">
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Active Alerts</p>
                     <h2 style={{ fontSize: '1.75rem', color: 'var(--danger)' }}>0</h2>
@@ -90,7 +90,7 @@ const StaffPortal = ({ statsData }) => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
-                <div className="card" style={{ padding: 0 }}>
+                <div className="card tour-staff-feed" style={{ padding: 0 }}>
                     <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div className="pulse" style={{ width: '10px', height: '10px', background: 'var(--success)', borderRadius: '50%' }}></div>
@@ -188,7 +188,7 @@ const StaffPortal = ({ statsData }) => {
 
                 {/* Lane Status Sidebar */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div className="card">
+                    <div className="card tour-staff-override">
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <h3 style={{ fontSize: '1.125rem' }}>Lane Control</h3>
                             <Settings2 size={18} color="var(--text-muted)" />

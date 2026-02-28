@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\OperatorController;
 use App\Http\Controllers\Api\TripController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\WalletController;
+use App\Http\Controllers\Api\KioskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,4 +43,12 @@ Route::prefix('v1')->group(function () {
 
     // Audit Logs (Admin)
     Route::get('/audit-logs', [AuditLogController::class, 'index']);
+
+    // Dedicated Kiosk Routes
+    Route::prefix('kiosk')->group(function () {
+        Route::get('/lookup-wallet', [KioskController::class, 'lookupWallet']);
+        Route::post('/generate-qr', [KioskController::class, 'generateQr']);
+        Route::get('/tx-status/{txId}', [KioskController::class, 'txStatus']);
+        Route::post('/cash-deposit', [KioskController::class, 'cashDeposit']);
+    });
 });

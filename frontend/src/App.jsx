@@ -9,6 +9,9 @@ import Transactions from './pages/Transactions';
 import Operators from './pages/Operators';
 import AuditLogs from './pages/AuditLogs';
 import ComingSoon from './components/ComingSoon';
+import KioskLayout from './pages/Kiosk/KioskLayout';
+import KioskHome from './pages/Kiosk/KioskHome';
+import KioskTopup from './pages/Kiosk/KioskTopup';
 
 // ─── Coming Soon pages ───────────────────────────────────────────────────────
 const Remittances = () => (
@@ -43,6 +46,13 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Kiosk Standalone Layout */}
+        <Route path="/kiosk" element={<KioskLayout />}>
+          <Route index element={<KioskHome />} />
+          <Route path="topup" element={<KioskTopup />} />
+        </Route>
+
+        {/* Dashboard Main Layout */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="vehicles" element={<Vehicles />} />

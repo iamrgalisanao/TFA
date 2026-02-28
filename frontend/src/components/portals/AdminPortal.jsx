@@ -5,7 +5,7 @@ const AdminPortal = ({ statsData }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* Admin Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
+            <div className="tour-admin-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
                 <div className="card">
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div>
@@ -42,7 +42,7 @@ const AdminPortal = ({ statsData }) => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
-                <div className="card">
+                <div className="card tour-admin-audit">
                     <h3 style={{ fontSize: '1.125rem', marginBottom: '1.5rem' }}>System Health & Audit</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         {[
@@ -66,7 +66,7 @@ const AdminPortal = ({ statsData }) => {
                     </div>
                 </div>
 
-                <div className="card">
+                <div className="card tour-admin-exports">
                     <h3 style={{ fontSize: '1.125rem', marginBottom: '1rem' }}>Quick Exports</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                         <button style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>

@@ -107,7 +107,13 @@ class LaneController extends Controller
     // --- Lane Events (Traffic Feed & Decision Engine) ---
     public function events(Request $request)
     {
-        return response()->json(LaneEvent::orderBy('created_at', 'desc')->limit(50)->get());
+        // Exclude raw_payload to prevent massive JSON serialization overhead on polling
+        return response()->json(
+            LaneEvent::select('id', 'event_uuid', 'camera_event_id', 'plate_number', 'lane_id', 'direction', 'event_timestamp', 'image_url', 'created_at')
+                ->orderBy('created_at', 'desc')
+                ->limit(50)
+                ->get()
+        );
     }
 
     public function ingest(Request $request)

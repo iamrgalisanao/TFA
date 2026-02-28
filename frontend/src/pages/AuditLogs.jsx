@@ -88,7 +88,7 @@ const AuditLogs = () => {
             </div>
 
             {/* Summary */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
+            <div className="tour-audit-summary" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
                 {[
                     { label: 'Total Events', value: counts.ALL, color: 'var(--primary)', icon: ShieldAlert },
                     { label: 'Traffic / ANPR', value: counts.TRAFFIC, color: '#8b5cf6', icon: Camera },
@@ -109,7 +109,7 @@ const AuditLogs = () => {
             </div>
 
             {/* Filters */}
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="tour-audit-filter" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input value={search} onChange={e => setSearch(e.target.value)}
                     placeholder="Search events..."
                     style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', fontSize: '0.875rem', width: '220px' }} />
@@ -124,7 +124,7 @@ const AuditLogs = () => {
             </div>
 
             {/* Timeline Feed */}
-            <div className="card" style={{ padding: '1.5rem' }}>
+            <div className="card tour-audit-feed" style={{ padding: '1.5rem' }}>
                 {loading ? (
                     <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>Loading audit entries...</p>
                 ) : filtered.length === 0 ? (

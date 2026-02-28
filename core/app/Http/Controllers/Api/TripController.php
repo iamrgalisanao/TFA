@@ -34,10 +34,17 @@ class TripController extends Controller
 
         $trips = $query->limit(100)->get();
 
+        // Prevent N+1 queries by fetching relationships in bulk
+        $tripIds = $trips->pluck('id');
+        $ledgers = LedgerTransaction::whereIn('ref_id', $tripIds)->get()->keyBy('ref_id');
+
+        $plateNumbers = $trips->pluck('plate_number')->unique();
+        $vehicles = Vehicle::whereIn('plate_number', $plateNumbers)->get()->keyBy('plate_number');
+
         // Attach ledger entries and compute display values
-        $result = $trips->map(function ($trip) {
-            $ledger = LedgerTransaction::where('ref_id', $trip->id)->first();
-            $vehicle = Vehicle::where('plate_number', $trip->plate_number)->first();
+        $result = $trips->map(function ($trip) use ($ledgers, $vehicles) {
+            $ledger = $ledgers->get($trip->id);
+            $vehicle = $vehicles->get($trip->plate_number);
 
             return [
                 'id' => $trip->id,

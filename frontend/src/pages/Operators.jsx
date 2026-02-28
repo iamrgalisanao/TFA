@@ -325,14 +325,14 @@ const Operators = () => {
                     <button onClick={fetchOperators} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'white', fontSize: '0.875rem', cursor: 'pointer' }}>
                         <RefreshCw size={14} /> Refresh
                     </button>
-                    <button onClick={() => setShowCreate(true)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.25rem', background: 'var(--primary)', color: 'white', borderRadius: 'var(--radius)', fontWeight: '600', fontSize: '0.875rem', border: 'none', cursor: 'pointer' }}>
+                    <button className="tour-operators-add" onClick={() => setShowCreate(true)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.25rem', background: 'var(--primary)', color: 'white', borderRadius: 'var(--radius)', fontWeight: '600', fontSize: '0.875rem', border: 'none', cursor: 'pointer' }}>
                         <Plus size={14} /> Register Operator
                     </button>
                 </div>
             </div>
 
             {/* Summary */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+            <div className="tour-operators-summary" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
                 {[
                     { label: 'Total Operators', value: operators.length, color: 'var(--primary)', icon: Building2 },
                     { label: 'Total AUM (Wallets)', value: `₱${(totalBalance / 100).toFixed(2)}`, color: 'var(--success)', icon: Wallet },
@@ -367,7 +367,7 @@ const Operators = () => {
                     <p style={{ color: 'var(--text-muted)' }}>No operators found.</p>
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
+                <div className="tour-operators-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
                     {filtered.map(op => (
                         <div key={op.id} className="card" style={{ padding: '1.5rem', cursor: 'pointer', transition: 'box-shadow 0.2s, transform 0.2s' }}
                             onClick={() => setSelectedOp(op)}

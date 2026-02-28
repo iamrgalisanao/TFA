@@ -214,7 +214,7 @@ const Transactions = () => {
             </div>
 
             {/* Summary Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+            <div className="tour-transactions-summary" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
                 {[
                     { label: 'Total Trips', value: trips.length, color: 'var(--primary)' },
                     { label: 'Completed (Paid)', value: trips.filter(t => t.status === 'EXIT_PAID').length, color: 'var(--success)' },
@@ -230,7 +230,7 @@ const Transactions = () => {
             </div>
 
             {/* Filters */}
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="tour-transactions-filter" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input
                     value={search}
                     onChange={e => setSearch(e.target.value)}
@@ -254,7 +254,7 @@ const Transactions = () => {
             </div>
 
             {/* Table */}
-            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div className="card tour-transactions-table" style={{ padding: 0, overflow: 'hidden' }}>
                 {loading ? (
                     <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading audit data...</div>
                 ) : filtered.length === 0 ? (

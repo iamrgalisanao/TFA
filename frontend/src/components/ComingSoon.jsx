@@ -10,7 +10,7 @@ const ComingSoon = ({ title, description, icon: Icon, eta }) => {
             </div>
 
             {/* Coming Soon Card */}
-            <div className="card" style={{
+            <div className="card tour-coming-soon" style={{
                 padding: '4rem 2rem',
                 textAlign: 'center',
                 background: 'linear-gradient(135deg, rgba(37,99,235,0.03) 0%, rgba(37,99,235,0.08) 100%)',
