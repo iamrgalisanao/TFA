@@ -15,6 +15,8 @@ const StaffPortal = ({ statsData }) => {
     const [simAlert, setSimAlert] = useState(null);
     const [search, setSearch] = useState('');
     const [laneFilter, setLaneFilter] = useState('ALL');
+    const [bridgeUrl, setBridgeUrl] = useState(localStorage.getItem('tfa_bridge_url') || 'http://localhost:9005');
+    const [showBridgeSettings, setShowBridgeSettings] = useState(false);
 
     const simulateScan = async () => {
         setIsSimulating(true);
@@ -22,18 +24,18 @@ const StaffPortal = ({ statsData }) => {
             // 1. Try hitting the Local Bridge first (for automatic local camera launch)
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 1000); // 1s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 1200); // slightly longer for ngrok
 
-                const bridgeResp = await fetch('http://localhost:9005/trigger-scan', {
+                const bridgeResp = await fetch(`${bridgeUrl}/trigger-scan`, {
                     method: 'POST',
                     signal: controller.signal
                 });
 
                 if (bridgeResp.ok) {
-                    setSimAlert({ type: 'success', text: 'Local Camera Bridge Triggered!' });
+                    setSimAlert({ type: 'success', text: 'Bridge Triggered!' });
                     setIsSimulating(false);
                     setTimeout(() => setSimAlert(null), 5000);
-                    return; // Success, no need to call server
+                    return;
                 }
             } catch (e) {
                 // Bridge not running or not supported, fall back to server-side simulator
@@ -119,21 +121,49 @@ const StaffPortal = ({ statsData }) => {
                                 </span>
                             )}
                         </div>
-                        <button
-                            onClick={simulateScan}
-                            disabled={isSimulating}
-                            style={{
-                                display: 'flex', alignItems: 'center', gap: '0.5rem',
-                                padding: '0.5rem 1rem', background: 'rgba(139, 92, 246, 0.1)',
-                                color: '#8b5cf6', border: '1px solid #8b5cf6',
-                                borderRadius: '4px', cursor: isSimulating ? 'not-allowed' : 'pointer', fontSize: '0.75rem', fontWeight: 'bold', transition: 'all 0.2s',
-                                boxShadow: '0 0 10px rgba(139, 92, 246, 0.3)'
-                            }}
-                        >
-                            {isSimulating ? <Loader2 size={14} className="animate-spin" /> : <MonitorPlay size={14} />}
-                            Launch Edge Simulator
-                        </button>
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <button
+                                onClick={() => setShowBridgeSettings(!showBridgeSettings)}
+                                title="Bridge Settings"
+                                style={{
+                                    padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border)',
+                                    background: showBridgeSettings ? 'var(--bg-main)' : 'white', cursor: 'pointer'
+                                }}
+                            >
+                                <Settings2 size={14} />
+                            </button>
+                            <button
+                                onClick={simulateScan}
+                                disabled={isSimulating}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.5rem',
+                                    padding: '0.5rem 1rem', background: 'rgba(139, 92, 246, 0.1)',
+                                    color: '#8b5cf6', border: '1px solid #8b5cf6',
+                                    borderRadius: '4px', cursor: isSimulating ? 'not-allowed' : 'pointer', fontSize: '0.75rem', fontWeight: 'bold', transition: 'all 0.2s',
+                                    boxShadow: '0 0 10px rgba(139, 92, 246, 0.3)'
+                                }}
+                            >
+                                {isSimulating ? <Loader2 size={14} className="animate-spin" /> : <MonitorPlay size={14} />}
+                                Launch Edge Simulator
+                            </button>
+                        </div>
                     </div>
+
+                    {showBridgeSettings && (
+                        <div style={{ padding: '0.75rem 1.5rem', background: 'rgba(139, 92, 246, 0.05)', borderBottom: '1px solid var(--border)', display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#8b5cf6' }}>BRIDGE URL:</span>
+                            <input
+                                value={bridgeUrl}
+                                onChange={(e) => {
+                                    setBridgeUrl(e.target.value);
+                                    localStorage.setItem('tfa_bridge_url', e.target.value);
+                                }}
+                                placeholder="http://localhost:9005 or your-ngrok-url"
+                                style={{ flex: 1, padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border)', fontSize: '0.75rem' }}
+                            />
+                            <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Use ngrok url for live server demo.</p>
+                        </div>
+                    )}
 
                     {/* Table Filters */}
                     <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', background: 'var(--bg-main)' }}>
