@@ -24,7 +24,7 @@ return new class extends Migration {
         Schema::create('lane_overrides', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('lane_id');
-            $table->uuid('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->enum('action', ['FORCE_OPEN', 'FORCE_CLOSE', 'LOCK', 'RELEASE']);
             $table->string('reason');
             $table->json('metadata')->nullable();
