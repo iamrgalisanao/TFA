@@ -26,6 +26,7 @@ const Dashboard = () => {
             if (isOperator || isAdmin) {
                 endpoints.push(api.get(`/wallet?mock_role=${role}`));
                 endpoints.push(api.get(`/vehicles?mock_role=${role}`));
+                endpoints.push(api.get(`/trips?mock_role=${role}`));
             }
 
             if (isStaff || isAdmin) {
@@ -37,12 +38,14 @@ const Dashboard = () => {
 
             let walletResp = { data: { balance_minor: 0, transactions: [], stats: {} } };
             let vehicleResp = { data: [] };
+            let tripsResp = { data: { trips: [] } };
             let lanesResp = { data: [] };
 
             let nextIdx = 1;
             if (isOperator || isAdmin) {
                 walletResp = results[nextIdx++];
                 vehicleResp = results[nextIdx++];
+                tripsResp = results[nextIdx++];
             }
             if (isStaff || isAdmin) {
                 lanesResp = results[nextIdx++];
@@ -54,7 +57,8 @@ const Dashboard = () => {
                 transactions: walletResp.data.transactions || [],
                 events: eventsResp.data || [],
                 lanes: lanesResp.data || [],
-                walletFull: walletResp.data
+                walletFull: walletResp.data,
+                trips: tripsResp.data.trips || []
             });
         } catch (err) {
             console.error('Dashboard fetch error:', err);

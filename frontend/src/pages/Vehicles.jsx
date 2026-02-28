@@ -14,6 +14,8 @@ const Vehicles = () => {
     const [formData, setFormData] = useState({ plate_number: '', vehicle_type: 'Bus' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterType, setFilterType] = useState('ALL');
 
     const fetchVehicles = async () => {
         try {
@@ -47,6 +49,14 @@ const Vehicles = () => {
         }
     };
 
+    const filteredVehicles = vehicles.filter(v => {
+        const matchesSearch = !searchQuery || v.plate_number.toLowerCase().includes(searchQuery.toLowerCase()) || v.operator?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesType = filterType === 'ALL' || v.vehicle_type === filterType;
+        return matchesSearch && matchesType;
+    });
+
+    const uniqueTypes = [...new Set(vehicles.map(v => v.vehicle_type))];
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -78,7 +88,9 @@ const Vehicles = () => {
                         <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                         <input
                             type="text"
-                            placeholder="Search by plate number..."
+                            placeholder="Search by plate or operator..."
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
                             style={{
                                 width: '100%',
                                 padding: '0.75rem 1rem 0.75rem 2.75rem',
@@ -89,9 +101,14 @@ const Vehicles = () => {
                             }}
                         />
                     </div>
-                    <button style={{ padding: '0.75rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'white' }}>
-                        <Filter size={18} />
-                    </button>
+                    <select
+                        value={filterType}
+                        onChange={e => setFilterType(e.target.value)}
+                        style={{ padding: '0.75rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'white', color: 'var(--text-main)', fontSize: '0.875rem' }}
+                    >
+                        <option value="ALL">All Types</option>
+                        {uniqueTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
                 </div>
 
                 {loading ? (
@@ -110,33 +127,41 @@ const Vehicles = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {vehicles.map((vehicle) => (
-                                <tr key={vehicle.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                                    <td style={{ padding: '1.25rem 1.5rem' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                            <div style={{ padding: '0.5rem', background: 'rgba(37, 99, 235, 0.05)', borderRadius: '8px', color: 'var(--primary)' }}>
-                                                <Car size={20} />
-                                            </div>
-                                            <div style={{ fontWeight: '700', fontSize: '1rem', letterSpacing: '0.5px' }}>{vehicle.plate_number}</div>
-                                        </div>
-                                    </td>
-                                    <td style={{ padding: '1.25rem 1.5rem' }}>
-                                        <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{vehicle.vehicle_type}</span>
-                                    </td>
-                                    <td style={{ padding: '1.25rem 1.5rem' }}>
-                                        <span style={{ fontSize: '0.875rem' }}>{vehicle.operator?.name}</span>
-                                    </td>
-                                    <td style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                                        {new Date(vehicle.created_at).toLocaleDateString()}
-                                    </td>
-                                    <td style={{ padding: '1.25rem 1.5rem', textAlign: 'right' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                            <button style={{ padding: '0.4rem', color: 'var(--text-muted)', background: 'transparent' }}><Edit2 size={16} /></button>
-                                            <button style={{ padding: '0.4rem', color: 'var(--danger)', background: 'transparent' }}><Trash2 size={16} /></button>
-                                        </div>
+                            {filteredVehicles.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                                        No vehicles match your search.
                                     </td>
                                 </tr>
-                            ))}
+                            ) : (
+                                filteredVehicles.map((vehicle) => (
+                                    <tr key={vehicle.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                                        <td style={{ padding: '1.25rem 1.5rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                <div style={{ padding: '0.5rem', background: 'rgba(37, 99, 235, 0.05)', borderRadius: '8px', color: 'var(--primary)' }}>
+                                                    <Car size={20} />
+                                                </div>
+                                                <div style={{ fontWeight: '700', fontSize: '1rem', letterSpacing: '0.5px' }}>{vehicle.plate_number}</div>
+                                            </div>
+                                        </td>
+                                        <td style={{ padding: '1.25rem 1.5rem' }}>
+                                            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{vehicle.vehicle_type}</span>
+                                        </td>
+                                        <td style={{ padding: '1.25rem 1.5rem' }}>
+                                            <span style={{ fontSize: '0.875rem' }}>{vehicle.operator?.name}</span>
+                                        </td>
+                                        <td style={{ padding: '1.25rem 1.5rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                                            {new Date(vehicle.created_at).toLocaleDateString()}
+                                        </td>
+                                        <td style={{ padding: '1.25rem 1.5rem', textAlign: 'right' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                                                <button style={{ padding: '0.4rem', color: 'var(--text-muted)', background: 'transparent' }}><Edit2 size={16} /></button>
+                                                <button style={{ padding: '0.4rem', color: 'var(--danger)', background: 'transparent' }}><Trash2 size={16} /></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 )}

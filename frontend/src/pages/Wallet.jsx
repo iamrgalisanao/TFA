@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wallet as WalletIcon, ArrowUpCircle, ArrowDownCircle, Plus, History, Loader2, CheckCircle2, TrendingUp } from 'lucide-react';
+import { Wallet as WalletIcon, ArrowUpCircle, ArrowDownCircle, Plus, History, Loader2, CheckCircle2, TrendingUp, Search } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -20,6 +20,8 @@ const Wallet = () => {
     const [topupAmount, setTopupAmount] = useState('500');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState(null);
+    const [search, setSearch] = useState('');
+    const [filter, setFilter] = useState('ALL');
 
     const fetchWalletData = async () => {
         try {
@@ -55,6 +57,12 @@ const Wallet = () => {
     const formatCurrency = (minor) => {
         return new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(minor / 100);
     };
+
+    const filteredTransactions = data.transactions.filter(tx => {
+        const matchSearch = !search || String(tx.idempotency_key).toLowerCase().includes(search.toLowerCase());
+        const matchType = filter === 'ALL' || tx.type === filter;
+        return matchSearch && matchType;
+    });
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -127,9 +135,38 @@ const Wallet = () => {
 
                 {/* Transaction History */}
                 <div className="card" style={{ padding: 0 }}>
-                    <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <History size={20} color="var(--primary)" />
-                        <h3 style={{ fontSize: '1.125rem' }}>Ledger Activity</h3>
+                    <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <History size={20} color="var(--primary)" />
+                            <h3 style={{ fontSize: '1.125rem' }}>Ledger Activity</h3>
+                        </div>
+                    </div>
+
+                    {/* Filters */}
+                    <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', background: 'var(--bg-main)' }}>
+                        <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+                            <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                            <input
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                                placeholder="Search Reference ID..."
+                                style={{ padding: '0.5rem 1rem 0.5rem 2.25rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', fontSize: '0.875rem', width: '100%' }}
+                            />
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            {['ALL', 'CREDIT', 'DEBIT'].map(f => (
+                                <button key={f}
+                                    onClick={() => setFilter(f)}
+                                    style={{
+                                        padding: '0.4rem 0.9rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '600',
+                                        border: '1px solid var(--border)', cursor: 'pointer',
+                                        background: filter === f ? 'var(--primary)' : 'white',
+                                        color: filter === f ? 'white' : 'var(--text-muted)'
+                                    }}>
+                                    {f === 'ALL' ? 'All' : f === 'CREDIT' ? 'Credits In (+)' : 'Debits Out (-)'}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     {loading ? (
@@ -147,12 +184,12 @@ const Wallet = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.transactions.length === 0 ? (
+                                {filteredTransactions.length === 0 ? (
                                     <tr>
-                                        <td colSpan="4" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>No transactions yet.</td>
+                                        <td colSpan="4" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>No transactions found.</td>
                                     </tr>
                                 ) : (
-                                    data.transactions.map((tx) => (
+                                    filteredTransactions.map((tx) => (
                                         <tr key={tx.id} style={{ borderBottom: '1px solid var(--border)' }}>
                                             <td style={{ padding: '1.25rem 1.5rem' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

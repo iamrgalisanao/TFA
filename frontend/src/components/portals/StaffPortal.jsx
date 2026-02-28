@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Activity, ShieldAlert, MonitorPlay, CheckCircle2, AlertCircle, Lock, Unlock, Settings2, Loader2, X } from 'lucide-react';
+import { Activity, ShieldAlert, MonitorPlay, CheckCircle2, AlertCircle, Lock, Unlock, Settings2, Loader2, X, Search, Filter } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 
@@ -15,6 +15,23 @@ const StaffPortal = ({ statsData }) => {
     const [reason, setReason] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState(null);
+    const [isSimulating, setIsSimulating] = useState(false);
+    const [simAlert, setSimAlert] = useState(null);
+    const [search, setSearch] = useState('');
+    const [laneFilter, setLaneFilter] = useState('ALL');
+
+    const simulateScan = async () => {
+        setIsSimulating(true);
+        try {
+            const resp = await api.post('/lane/trigger-camera?mock_role=' + role);
+            setSimAlert({ type: 'success', text: resp.data.message });
+        } catch (err) {
+            setSimAlert({ type: 'error', text: 'Failed to launch camera simulator.' });
+        } finally {
+            setIsSimulating(false);
+            setTimeout(() => setSimAlert(null), 5000);
+        }
+    };
 
     const handleOverride = async (e) => {
         e.preventDefault();
@@ -37,6 +54,13 @@ const StaffPortal = ({ statsData }) => {
             setIsSubmitting(false);
         }
     };
+
+    const uniqueLanes = [...new Set(statsData.events?.map(e => e.lane_id) || [])];
+    const filteredEvents = (statsData.events || []).filter(e => {
+        const matchSearch = !search || String(e.plate_number).toLowerCase().includes(search.toLowerCase());
+        const matchLane = laneFilter === 'ALL' || e.lane_id === laneFilter;
+        return matchSearch && matchLane;
+    });
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -66,13 +90,52 @@ const StaffPortal = ({ statsData }) => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
-                {/* Traffic Feed */}
                 <div className="card" style={{ padding: 0 }}>
-                    <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div className="pulse" style={{ width: '10px', height: '10px', background: 'var(--success)', borderRadius: '50%' }}></div>
                             <h3 style={{ fontSize: '1.125rem' }}>Live Terminal Feed</h3>
+                            {simAlert && (
+                                <span className="animate-fade-in" style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', background: simAlert.type === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', color: simAlert.type === 'success' ? 'var(--success)' : 'var(--danger)', borderRadius: '4px', fontWeight: 'bold' }}>
+                                    {simAlert.text}
+                                </span>
+                            )}
                         </div>
+                        <button
+                            onClick={simulateScan}
+                            disabled={isSimulating}
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                                padding: '0.5rem 1rem', background: 'rgba(139, 92, 246, 0.1)',
+                                color: '#8b5cf6', border: '1px solid #8b5cf6',
+                                borderRadius: '4px', cursor: isSimulating ? 'not-allowed' : 'pointer', fontSize: '0.75rem', fontWeight: 'bold', transition: 'all 0.2s',
+                                boxShadow: '0 0 10px rgba(139, 92, 246, 0.3)'
+                            }}
+                        >
+                            {isSimulating ? <Loader2 size={14} className="animate-spin" /> : <MonitorPlay size={14} />}
+                            Launch Edge Simulator
+                        </button>
+                    </div>
+
+                    {/* Table Filters */}
+                    <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', background: 'var(--bg-main)' }}>
+                        <div style={{ position: 'relative', flex: 1, minWidth: '150px' }}>
+                            <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                            <input
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                                placeholder="Search plate..."
+                                style={{ padding: '0.5rem 1rem 0.5rem 2.25rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', fontSize: '0.875rem', width: '100%' }}
+                            />
+                        </div>
+                        <select
+                            value={laneFilter}
+                            onChange={e => setLaneFilter(e.target.value)}
+                            style={{ padding: '0.5rem 1.5rem 0.5rem 1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'white', color: 'var(--text-main)', fontSize: '0.875rem' }}
+                        >
+                            <option value="ALL">All Lanes</option>
+                            {uniqueLanes.map(l => <option key={l} value={l}>{l}</option>)}
+                        </select>
                     </div>
 
                     <div style={{ overflowX: 'auto', maxHeight: '400px' }}>
@@ -86,10 +149,10 @@ const StaffPortal = ({ statsData }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {statsData.events.length === 0 ? (
-                                    <tr><td colSpan="4" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Waiting for traffic...</td></tr>
+                                {filteredEvents.length === 0 ? (
+                                    <tr><td colSpan="4" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>No traffic events found.</td></tr>
                                 ) : (
-                                    statsData.events.map((evt) => (
+                                    filteredEvents.map((evt) => (
                                         <tr key={evt.id} style={{ borderBottom: '1px solid var(--border)' }}>
                                             <td style={{ padding: '1.25rem 1.5rem' }}>
                                                 <div style={{ fontWeight: '700' }}>{evt.plate_number}</div>

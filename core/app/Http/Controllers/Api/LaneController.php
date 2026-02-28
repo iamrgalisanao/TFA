@@ -82,6 +82,28 @@ class LaneController extends Controller
         });
     }
 
+    // --- Demo / Simulator Integration ---
+    public function triggerCameraSimulator(Request $request)
+    {
+        // The script is in the global tools folder, one level up from the core logic
+        $scriptPath = base_path('../tools/usb_camera_simulator.py');
+
+        // Launch asynchronously on the host machine so PHP doesn't block
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $toolsDir = realpath(base_path('../tools'));
+            // The shell launched by PHP might not have the same python path/envs as your manual terminal.
+            // We run a quick pip install to ensure cv2 and other requirements are present in this environment before launching.
+            $cmd = "start \"Edge Simulator\" cmd.exe /k \"cd /d {$toolsDir} && pip install opencv-python pytesseract requests Pillow numpy && python usb_camera_simulator.py\"";
+            pclose(popen($cmd, "r"));
+        } else {
+            exec("python \"$scriptPath\" > /dev/null 2>&1 &");
+        }
+
+        return response()->json([
+            'message' => 'Edge Camera Simulator activated. Check your host machine.'
+        ]);
+    }
+
     // --- Lane Events (Traffic Feed & Decision Engine) ---
     public function events(Request $request)
     {

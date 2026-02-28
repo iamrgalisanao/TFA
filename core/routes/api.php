@@ -21,8 +21,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/lanes/{id}/override', [LaneController::class, 'override']);
 
     // Traffic Feed (Events)
-    Route::get('/lane/events', [LaneController::class, 'events']);
     Route::post('/lane/event', [LaneController::class, 'ingest']);
+    Route::post('/lane/trigger-camera', [LaneController::class, 'triggerCameraSimulator']);
+    Route::get('/lane/events', [LaneController::class, 'events']);
     Route::get('/vehicles', [VehicleController::class, 'index']);
     Route::post('/vehicles', [VehicleController::class, 'store']);
     Route::get('/wallet', [WalletController::class, 'index']);
