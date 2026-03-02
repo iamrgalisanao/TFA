@@ -38,6 +38,8 @@ const MainLayout = () => {
             { name: 'Transactions', path: '/transactions', icon: FileText, roles: ['admin', 'operator'] },
             { name: 'Remittances', path: '/remittances', icon: Landmark, roles: ['admin'] },
             { name: 'Audit Logs', path: '/audit', icon: ShieldAlert, roles: ['admin'] },
+            { name: 'Support', path: '/support', icon: HelpCircle, roles: ['operator'] },
+            { name: 'Disputes', path: '/dispute-management', icon: HelpCircle, roles: ['admin', 'staff'] },
             { name: 'Settings', path: '/settings', icon: Settings, roles: ['admin', 'staff', 'operator'] },
         ];
         return items.filter(item => item.roles.includes(role));

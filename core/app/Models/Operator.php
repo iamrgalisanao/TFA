@@ -22,4 +22,9 @@ class Operator extends Model
     {
         return $this->hasMany(Vehicle::class);
     }
+
+    public function disputes(): HasMany
+    {
+        return $this->hasMany(Dispute::class);
+    }
 }

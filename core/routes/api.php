@@ -44,6 +44,15 @@ Route::prefix('v1')->group(function () {
     // Audit Logs (Admin)
     Route::get('/audit-logs', [AuditLogController::class, 'index']);
 
+    // Disputes (Operator)
+    Route::get('/disputes', [\App\Http\Controllers\Api\DisputeController::class, 'index']);
+    Route::post('/disputes', [\App\Http\Controllers\Api\DisputeController::class, 'store']);
+    Route::get('/disputes/{id}', [\App\Http\Controllers\Api\DisputeController::class, 'show']);
+
+    // Admin Group for Disputes
+    Route::get('/admin/disputes', [\App\Http\Controllers\Api\Admin\DisputeManagementController::class, 'index']);
+    Route::put('/admin/disputes/{id}', [\App\Http\Controllers\Api\Admin\DisputeManagementController::class, 'update']);
+
     // Dedicated Kiosk Routes
     Route::prefix('kiosk')->group(function () {
         Route::get('/lookup-wallet', [KioskController::class, 'lookupWallet']);

@@ -1,0 +1,119 @@
+  
+TOR FOR TERMINAL FEE COLLECTION SYSTEM  
+ 
+Objective:  
+ 
+• To design and implement a cashless terminal fee collection system for bus operators 
+at PITX that supports secure digital payment methods (e.g., e -wallets, online 
+banking, debit/credit cards) in compliance with the Concession Agreement with 
+DOTr.  
+• To reduce cash -based terminal fee transactions by at least 90% within six months of 
+rollout, ensuring more accurate and transparent collection.  
+• To deploy and integrate the system with PITX's existing operational and financial 
+infrastructure within the next 6 months, including pilot testing and phased adoption 
+with PUV operators.  
+• To streamline terminal fee payments, improve accountability, reduce risks of 
+leakage, and fulfill regulatory obligations under the Concession Agreement.  
+• To fully operationalize and achieve compliance by Q1 of next year, with continuous 
+monitoring and system optimization thereafter.  
+ 
+Needs to be Addressed:  
+ 
+• The current manual, cash -based terminal fee collection from PUV operators at PITX 
+creates inefficiencies like longer processing times, risks of leakage, administrative 
+burdens, and difficulties in tracking payments accurately.  
+• Cash handling introduces security risks and limits transparency in reporting.  
+• PITX is required under the Concession Agreement (CA) with DOTr to ensure daily 
+collection of terminal fees. The lack of an enhanced or automated collection process 
+creates the risk of non -compliance with the daily collection obligation, which could 
+undermi ne contractual performance and stakeholder confidence.  
+ 
+ 
+How will this be accomplished, and what are the expected results?  
+ 
+Approach:  The system proposes a cashless, prepaid wallet solution integrated with 
+Automatic Plate Number Recognition (APNR) , designed for PUV operators. It automates 
+collection by deducting fees directly from an operator's wallet balance upon entry, while 
+providing transparency via an online portal.  
+ 
+Key Features & Functionality:  
+ 
+1. Automatic Plate Number Recognition (APNR):  Cameras at entry points scan vehicle 
+plates, cross -check against a registered database, and link verified vehicles to their 
+operator's wallet. This ensures accurate billing for registered vehicles.  
+2. Dedicated Wallet per Operator:  Each operator has a prepaid digital wallet from 
+which fees are automatically deducted upon entry (similar to toll collection). This 
+eliminates manual processing and guarantees real -time fee collection.  
+3. Wallet Reloading Options:  Operators can replenish via the PITX Website & Payment 
+Gateway (linked to banks) or Onsite Loading Machines (kiosks accepting cash or 
+cards). This ensures flexible, uninterrupted funding.  
+   
+4. PITX Website Portal (Operator Portal):  A centralized platform for operators to view 
+balances, generate transaction history (entries, deductions, top -ups), access 
+statements, and monitor notifications. This provides transparency and reduces 
+disputes.  
+5. Collection Reporting & Compliance:  PITX administrators get real -time dashboards 
+showing vehicle entries, fee deductions, operator balances, and automated 
+compliance reports for DOTr oversight and auditing. This ensures revenue assurance 
+and fulfillment of Concession Agreement obligations.  
+6. Allow negative balance , with automated notifications sent to the Operators for 
+reminder to reload, and automated notifications sent to PITX as warning so we can 
+tap the attention of the operators as well  
+7. Customer support once deployed for concerns such as incorrect balance, load not 
+reflected, fee not deducted, etc.  
+ 
+Expect ed Results:  
+ 
+• Operational Efficiency:  Collection is fully automated with real -time deductions, 
+reducing manual intervention and administrative overhead.  
+• Collection Assurance & Transparency:  Prepaid wallets ensure fees are collected 
+before entry, eliminating unpaid balances. Automated reporting provides auditable 
+records to PITX and DOTr.  
+• Cost Savings:  Lower manpower is needed for manual collection and reconciliation, 
+and there is a reduction in cash handling risks (loss, theft).  
+• Compliance with DOTr Concession Agreement:  The system demonstrates a 
+commitment to modernization and enhances PITX’s reputation as an advanced, 
+cashless transport hub.  
+• Stakeholder Convenience:  Bus operators get faster entry, self -service portals, and 
+easy access to statements. PITX management gains a real -time view of collections.  
+ 
+ 
+II. Relevance to the Value (Innovation)  
+ 
+Given the Value definition, how does embody the values?  
+The system is a significant innovation compared to PITX's current manual, cash -based 
+process, which is prone to delays, errors, and leakage. It embodies the value ("We embrace 
+new methods that deliver better results" ) by introducing a prepaid wallet linke d to APNR 
+(Automatic Number Plate Recognition) for real -time fee deduction at the point of entry. This 
+eliminates manual reconciliation and ensures full transparency. It sets PITX apart as a 
+pioneer, offering operators instant access to transaction history and statements through a 
+dedicated portal, aligning it with DOTr's modernization agenda.  
+ 
+How different from what was being done before or what is currently in the external 
+market?  
+ 
+• Before:  Terminal fees were collected in cash and reconciled manually, leading to 
+delays, errors, and limited visibility. Most terminals in the country still use this setup.  
+• New System:  It is automated, cashless, and data -driven, providing real -time 
+transparency for both the terminal and the operators. This positions PITX as the first 
+transport terminal in the Philippines  to adopt an ANPR -linked cashless collection 
+system, setting a new benchmark for smart and efficient terminal operations.    
+ 
+ 
+Prepared By:  
+ 
+Domingo Ibarlin Jr  
+IT Manager  
+ 
+ 
+Noted & Reviewed By:  
+ 
+Alena Tan  
+Finance & Accounting Head  
+ 
+ 
+ 
+Approved By:  
+ 
+Mohit Malhi  
+Chief Operating Officer  

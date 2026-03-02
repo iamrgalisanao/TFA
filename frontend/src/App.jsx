@@ -8,6 +8,8 @@ import Wallet from './pages/Wallet';
 import Transactions from './pages/Transactions';
 import Operators from './pages/Operators';
 import AuditLogs from './pages/AuditLogs';
+import Disputes from './pages/Disputes';
+import DisputeManagement from './pages/DisputeManagement';
 import ComingSoon from './components/ComingSoon';
 import KioskLayout from './pages/Kiosk/KioskLayout';
 import KioskHome from './pages/Kiosk/KioskHome';
@@ -60,6 +62,8 @@ function App() {
           <Route path="transactions" element={<Transactions />} />
           <Route path="operators" element={<Operators />} />
           <Route path="audit" element={<AuditLogs />} />
+          <Route path="support" element={<Disputes />} />
+          <Route path="dispute-management" element={<DisputeManagement />} />
           <Route path="lanes" element={<Lanes />} />
           <Route path="remittances" element={<Remittances />} />
           <Route path="settings" element={<Settings />} />

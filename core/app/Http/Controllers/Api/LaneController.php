@@ -185,10 +185,15 @@ class LaneController extends Controller
                     $fee_minor = 5000; // Flat 50.00 PHP for simulation
                     $wallet = $vehicle ? Wallet::where('operator_id', $vehicle->operator_id)->first() : null;
 
-                    if ($wallet && $wallet->balance_minor >= $fee_minor) {
-                        // Deduct
+                    if ($wallet) {
+                        // Deduct (allows negative balances as per TOR)
                         $wallet->balance_minor -= $fee_minor;
                         $wallet->save();
+
+                        // Notify if negative
+                        if ($wallet->balance_minor < 0) {
+                            $wallet->operator->notify(new \App\Notifications\NegativeBalanceWarning($wallet));
+                        }
 
                         // Ledger
                         LedgerTransaction::create([
@@ -213,9 +218,10 @@ class LaneController extends Controller
                         $decision['reason'] = 'fee_deducted';
                         $decision['wallet_balance_after_minor'] = $wallet->balance_minor;
                     } else {
+                        // Vehicle not registered or no wallet
                         $trip->update(['status' => 'HELD_INSUFFICIENT_FUNDS']);
                         $decision['action'] = 'hold';
-                        $decision['reason'] = 'insufficient_funds';
+                        $decision['reason'] = 'unregistered_vehicle';
                         $decision['exception_flag'] = true;
                     }
                 }
