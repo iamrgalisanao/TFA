@@ -36,3 +36,9 @@
 # Temp
 .tmp/
 .temp/
+
+# BMAD Framework
+web-bundles/
+*.bmad
+bmad-*
+.bmad/
