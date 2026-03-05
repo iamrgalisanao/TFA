@@ -42,3 +42,6 @@ web-bundles/
 *.bmad
 bmad-*
 .bmad/
+.bmad-core/
+.github/
+
