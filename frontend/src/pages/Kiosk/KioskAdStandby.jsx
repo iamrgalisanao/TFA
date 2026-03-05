@@ -12,12 +12,18 @@ const KioskAdStandby = ({ onWake, isOnline }) => {
     // with the DOM on the same domain (e.g. clicking around the website before it goes idle).
     useEffect(() => {
         if (videoRef.current) {
-            videoRef.current.play().catch(() => {
-                // Silently fail if still blocked; muting usually resolves this.
+            // First, try to play with audio (not muted)
+            videoRef.current.muted = false;
+            videoRef.current.play().catch((err) => {
+                // If blocked (NotAllowedError), fallback to muted autoplay
+                console.warn("Audio autoplay blocked, falling back to muted.", err);
+                if (videoRef.current) {
+                    videoRef.current.muted = true;
+                    videoRef.current.play().catch(e => console.error("Final autoplay failure:", e));
+                }
             });
         }
     }, []);
-
 
     return (
         <div style={{
@@ -57,7 +63,7 @@ const KioskAdStandby = ({ onWake, isOnline }) => {
                     src={adVideoUrl}
                     autoPlay
                     loop
-                    muted // Essential for autoplay on modern browsers without prior user interaction
+                    // No longer hardcoded to muted; handled in useEffect fallback
                     playsInline
                     style={{
                         position: 'absolute',
@@ -70,6 +76,7 @@ const KioskAdStandby = ({ onWake, isOnline }) => {
                 />
 
             </div>
+
 
             {/* Tap to Start Prompt Section (Only when Online) */}
             {isOnline && (
