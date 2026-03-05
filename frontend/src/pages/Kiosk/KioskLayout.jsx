@@ -38,19 +38,18 @@ const KioskLayout = () => {
                 throw new Error('OS reported offline');
             }
 
-            // Actively ping a standard connectivity-check URL to bypass virtual network adapter false positives
-            // Google's generate_204 endpoint is standard practice for captive portal/connectivity checks
-            // Appending a timestamp guarantees we don't hit an OS-level or browser-level DNS/fetch cache
-            const url = `https://clients3.google.com/generate_204?cb=${Date.now()}`;
+            // Actively ping our own backend health check to ensure we can reach our services.
+            // Using the /up endpoint provided by Laravel 11.
+            const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001/api/v1';
+            // Extract the base domain/path to hit the /up endpoint (one level above /api/v1)
+            const healthUrl = baseUrl.replace('/api/v1', '/up') + `?cb=${Date.now()}`;
 
-            // NOTE: When actually offline, browsers will inherently log a red "net::ERR_EMPTY_RESPONSE" 
-            // or "failed to fetch" error to the console. This is a browser security/networking feature 
-            // and cannot be suppressed by JavaScript. We expect this error to happen when offline!
-            await fetch(url, {
+            await fetch(healthUrl, {
                 mode: 'no-cors',
                 cache: 'no-store',
                 method: 'HEAD'
             });
+
 
             // If the fetch succeeds (even opaque response due to no-cors), we have a route out.
             setIsOnline(prev => {

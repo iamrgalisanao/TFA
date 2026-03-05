@@ -12,17 +12,29 @@ export const AuthProvider = ({ children }) => {
 
 
     const fetchProfile = async () => {
+        // Skip auth profile fetch if we are on a kiosk route.
+        // Kiosks are standalone public terminals and don't need a staff/admin session.
+        if (window.location.pathname.startsWith('/kiosk')) {
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         try {
             const resp = await api.get(`/me?mock_role=${role}`);
             setUser(resp.data.user);
-            setRole(resp.data.role); // In case server defaults it
+            setRole(resp.data.role);
         } catch (err) {
-            console.error('Auth fetch error:', err);
+            // Silently handle auth errors on staging/production to avoid console noise
+            // if the service is temporarily unavailable (503).
+            if (err.response?.status !== 503) {
+                console.error('Auth fetch error:', err);
+            }
         } finally {
             setLoading(false);
         }
     };
+
 
     useEffect(() => {
         fetchProfile();
