@@ -12,11 +12,12 @@ const KioskAdStandby = ({ onWake, isOnline }) => {
     // with the DOM on the same domain (e.g. clicking around the website before it goes idle).
     useEffect(() => {
         if (videoRef.current) {
-            videoRef.current.play().catch(err => {
-                console.warn("Audio autoplay blocked by browser policy until user interaction occurs.", err);
+            videoRef.current.play().catch(() => {
+                // Silently fail if still blocked; muting usually resolves this.
             });
         }
     }, []);
+
 
     return (
         <div style={{
@@ -56,16 +57,18 @@ const KioskAdStandby = ({ onWake, isOnline }) => {
                     src={adVideoUrl}
                     autoPlay
                     loop
+                    muted // Essential for autoplay on modern browsers without prior user interaction
                     playsInline
                     style={{
                         position: 'absolute',
                         width: '100%',
                         height: '100%',
-                        objectFit: 'contain', // Ensure the ad isn't clipped
-                        opacity: isOnline ? 1 : 0.6, // Dim the video if the machine is offline
+                        objectFit: 'contain',
+                        opacity: isOnline ? 1 : 0.6,
                         transition: 'opacity 0.5s'
                     }}
                 />
+
             </div>
 
             {/* Tap to Start Prompt Section (Only when Online) */}
